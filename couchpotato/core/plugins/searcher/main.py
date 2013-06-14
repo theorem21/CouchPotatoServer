@@ -148,6 +148,7 @@ class Searcher(Plugin):
         available_status, ignored_status = fireEvent('status.get', ['available', 'ignored'], single = True)
 
         found_releases = []
+        too_early_to_search = []
 
         default_title = getTitle(movie['library'])
         if not default_title:
@@ -161,7 +162,7 @@ class Searcher(Plugin):
         ret = False
         for quality_type in movie['profile']['types']:
             if not self.conf('always_search') and not self.couldBeReleased(quality_type['quality']['identifier'] in pre_releases, release_dates):
-                log.info('Too early to search for %s, %s', (quality_type['quality']['identifier'], default_title))
+                too_early_to_search.append(quality_type['quality']['identifier'])
                 continue
 
             has_better_quality = 0
@@ -267,6 +268,9 @@ class Searcher(Plugin):
             # Break if CP wants to shut down
             if self.shuttingDown() or ret:
                 break
+
+        if len(too_early_to_search) > 0:
+            log.info2('Too early to search for %s, %s', (too_early_to_search, default_title))
 
         fireEvent('notify.frontend', type = 'searcher.ended.%s' % movie['id'], data = True)
 
