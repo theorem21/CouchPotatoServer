@@ -128,8 +128,6 @@ class Core(Plugin):
 
         try:
             IOLoop.current().stop()
-        except RuntimeError:
-            pass
         except:
             log.error('Failed shutting down the server: %s', traceback.format_exc())
 

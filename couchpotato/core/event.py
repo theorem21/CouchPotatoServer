@@ -52,7 +52,7 @@ def fireEvent(name, *args, **kwargs):
     for event in events[name]:
         e.handle(event['handler'], priority = event['priority'])
 
-    #log.debug('Firing event %s', name)
+    log.debug('Firing event %s', name)
     try:
 
         options = {
@@ -135,8 +135,6 @@ def fireEvent(name, *args, **kwargs):
             options['on_complete']()
 
         return results
-    except KeyError, e:
-        pass
     except Exception:
         log.error('%s: %s', (name, traceback.format_exc()))
 

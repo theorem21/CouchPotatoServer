@@ -14,6 +14,7 @@
 from couchpotato.core.helpers.variable import natcmp
 import Queue
 import hashlib
+import logging
 import sys
 import threading
 
@@ -212,6 +213,7 @@ class Event(object):
                     continue
 
                 if order_lock:
+                    logging.info('Lock: %s' % self.name)
                     order_lock.acquire()
 
                 try:
@@ -233,6 +235,7 @@ class Event(object):
                         self.queue.task_done()
 
                     if order_lock:
+                        logging.info('Unlock: %s' % self.name)
                         order_lock.release()
 
                     if self.queue.empty():
